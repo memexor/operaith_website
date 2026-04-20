@@ -1,0 +1,2 @@
+import { CTA } from '@/components/CTA'; import { ValueGrid } from '@/components/ValueGrid';
+export default function ProductPage(){return <><section className="py-20"><div className="container-shell"><h1 className="section-title">A system for daily transportation operations</h1><p className="section-copy">Operaith is built for organizations that need dispatch, execution visibility, and structured records in one place.</p></div></section><ValueGrid /><CTA /></>}

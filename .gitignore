@@ -1,0 +1,48 @@
+# dependencies
+node_modules/
+
+# next.js build output
+.next/
+out/
+
+# production build artifacts
+dist/
+build/
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# macOS / editor / OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# test / coverage artifacts
+coverage/
+.playwright/
+test-results/
+
+# package artifacts
+*.zip
+*.tar
+*.tgz
+
+# local runtime notes
+BUILD_LOG.txt
+PACKAGE_NOTES.txt
