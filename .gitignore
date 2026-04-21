@@ -8,6 +8,7 @@ out/
 # production build artifacts
 dist/
 build/
+package-lock.json
 
 # local env files
 .env

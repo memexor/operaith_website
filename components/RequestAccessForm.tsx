@@ -11,6 +11,7 @@ type FormState = {
   workEmail: string;
   phoneNumber: string;
   notes: string;
+  smsConsent: boolean;
 };
 
 type Errors = Partial<Record<keyof FormState, string>>;
@@ -22,6 +23,7 @@ const initialState: FormState = {
   workEmail: '',
   phoneNumber: '',
   notes: '',
+  smsConsent: false,
 };
 
 function apiBaseUrl() {
@@ -45,6 +47,7 @@ export function RequestAccessForm() {
       form.contactName.trim() &&
       form.workEmail.trim() &&
       form.phoneNumber.trim() &&
+      form.smsConsent &&
       !submitting
     );
   }, [form, submitting]);
@@ -63,6 +66,8 @@ export function RequestAccessForm() {
     if (!form.workEmail.trim()) nextErrors.workEmail = 'Work email is required.';
     else if (!validateEmail(form.workEmail.trim())) nextErrors.workEmail = 'Enter a valid work email.';
     if (!form.phoneNumber.trim()) nextErrors.phoneNumber = 'Phone number is required.';
+    if (!form.smsConsent)
+      nextErrors.smsConsent = 'Please confirm SMS consent before submitting this request.';
 
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
@@ -124,7 +129,7 @@ export function RequestAccessForm() {
           value={form.organizationName}
           onChange={(event) => update('organizationName', event.target.value)}
           placeholder="Your organization"
-          className="w-full rounded-2xl border border-line px-4 py-3 placeholder:text-slate-400"
+          className="w-full rounded-xl border border-line px-4 py-3 placeholder:text-slate-400 focus:border-blue-300"
         />
         {errors.organizationName ? <p className="mt-2 text-sm text-red-600">{errors.organizationName}</p> : null}
       </div>
@@ -139,7 +144,7 @@ export function RequestAccessForm() {
             value={form.contactName}
             onChange={(event) => update('contactName', event.target.value)}
             placeholder="Your full name"
-            className="w-full rounded-2xl border border-line px-4 py-3 placeholder:text-slate-400"
+            className="w-full rounded-xl border border-line px-4 py-3 placeholder:text-slate-400 focus:border-blue-300"
           />
           {errors.contactName ? <p className="mt-2 text-sm text-red-600">{errors.contactName}</p> : null}
         </div>
@@ -153,7 +158,7 @@ export function RequestAccessForm() {
             value={form.jobTitle}
             onChange={(event) => update('jobTitle', event.target.value)}
             placeholder="Director, Manager, Dispatcher…"
-            className="w-full rounded-2xl border border-line px-4 py-3 placeholder:text-slate-400"
+            className="w-full rounded-xl border border-line px-4 py-3 placeholder:text-slate-400 focus:border-blue-300"
           />
         </div>
       </div>
@@ -169,7 +174,7 @@ export function RequestAccessForm() {
             value={form.workEmail}
             onChange={(event) => update('workEmail', event.target.value)}
             placeholder="you@organization.org"
-            className="w-full rounded-2xl border border-line px-4 py-3 placeholder:text-slate-400"
+            className="w-full rounded-xl border border-line px-4 py-3 placeholder:text-slate-400 focus:border-blue-300"
           />
           {errors.workEmail ? <p className="mt-2 text-sm text-red-600">{errors.workEmail}</p> : null}
         </div>
@@ -184,10 +189,35 @@ export function RequestAccessForm() {
             value={form.phoneNumber}
             onChange={(event) => update('phoneNumber', event.target.value)}
             placeholder="(555) 123-4567"
-            className="w-full rounded-2xl border border-line px-4 py-3 placeholder:text-slate-400"
+            className="w-full rounded-xl border border-line px-4 py-3 placeholder:text-slate-400 focus:border-blue-300"
           />
           {errors.phoneNumber ? <p className="mt-2 text-sm text-red-600">{errors.phoneNumber}</p> : null}
         </div>
+      </div>
+
+      <div className="rounded-2xl border border-line bg-soft/70 p-4">
+        <label className="flex items-start gap-3 text-sm leading-6 text-ink">
+          <input
+            type="checkbox"
+            checked={form.smsConsent}
+            onChange={(event) => update('smsConsent', event.target.checked)}
+            className="mt-1 h-4 w-4 rounded border-line text-brand focus:ring-brand"
+          />
+          <span>
+            I agree to receive transactional SMS from Operaith for account verification, onboarding updates,
+            ride reminders, ETA changes, and service alerts. Message frequency varies. Message and data
+            rates may apply. Reply STOP to opt out and HELP for support. See{' '}
+            <Link href="/terms" className="font-medium text-brand underline underline-offset-2">
+              Terms
+            </Link>{' '}
+            and{' '}
+            <Link href="/privacy" className="font-medium text-brand underline underline-offset-2">
+              Privacy Policy
+            </Link>
+            .
+          </span>
+        </label>
+        {errors.smsConsent ? <p className="mt-2 text-sm text-red-600">{errors.smsConsent}</p> : null}
       </div>
 
       <div>
@@ -200,7 +230,7 @@ export function RequestAccessForm() {
           onChange={(event) => update('notes', event.target.value)}
           placeholder="Number of riders, centers, or current dispatch challenges"
           rows={4}
-          className="w-full rounded-2xl border border-line px-4 py-3 placeholder:text-slate-400"
+          className="w-full rounded-xl border border-line px-4 py-3 placeholder:text-slate-400 focus:border-blue-300"
         />
       </div>
 
@@ -213,22 +243,15 @@ export function RequestAccessForm() {
       <button
         type="submit"
         disabled={!canSubmit}
-        className="inline-flex w-full items-center justify-center rounded-2xl bg-brand px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-6 py-3 text-base font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {submitting ? 'Submitting…' : 'Submit Request'}
       </button>
 
-      <div className="rounded-2xl border border-line bg-soft px-4 py-3 text-xs leading-6 text-muted">
-        We typically respond within 1–2 business days. By continuing, you agree to our{' '}
-        <Link href="/terms" className="font-medium text-ink underline decoration-slate-300 underline-offset-4 hover:text-brand">
-          Terms
-        </Link>{' '}
-        and{' '}
-        <Link href="/privacy" className="font-medium text-ink underline decoration-slate-300 underline-offset-4 hover:text-brand">
-          Privacy Policy
-        </Link>
-        .
-      </div>
+      <p className="text-xs leading-6 text-muted">We typically respond within 1–2 business days.</p>
+      <p className="text-xs leading-6 text-muted">
+        SMS consent is not shared with third parties or affiliates for marketing purposes.
+      </p>
     </form>
   );
 }
